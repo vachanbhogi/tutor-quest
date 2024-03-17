@@ -85,13 +85,9 @@ function Calendar({ onDateClick, events }: CalendarProps) {
                                             {dayNumber > 0 && dayNumber <= daysInMonth && (
                                                 <>
                                                     <p className={`absolute top-2 left-2 text-xs p-2 rounded-full ${isToday ? 'text-white bg-blue-500' : 'text-black'}`}>{dayNumber}</p>
-                                                    {eventsForDate.length > 0 && (
-                                                        <div className="mt-2 bg-blue-100 border-2 shadow-md rounded-lg w-full p-2">
-                                                            {eventsForDate.map((event, index) => (
-                                                                <div key={index} className="py-1 text-xs text-center">{formatTime(event.start_time)} - {formatTime(event.start_time + event.duration)}</div>
-                                                            ))}
-                                                        </div>
-                                                    )}
+                                                    {eventsForDate.map((event, index) => (
+                                                        <div key={index} className={`mt-2 border-2 shadow-md rounded-lg w-full p-2 text-xs text-center ${event.student_id ? 'bg-blue-100 opacity-50' : 'bg-blue-300'}`}>{formatTime(event.start_time)} - {formatTime(event.start_time + event.duration)}</div>
+                                                    ))}
                                                 </>
                                             )}
                                         </div>
