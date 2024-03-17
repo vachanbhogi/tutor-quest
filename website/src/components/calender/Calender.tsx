@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { Event } from "../../types";
+import { Event } from "../../utils/types";
+import { formatTime } from "../../utils/helpers";
 
 type CalendarProps = {
     onDateClick: (day: Date) => void;
@@ -106,12 +107,3 @@ function Calendar({ onDateClick, events }: CalendarProps) {
 }
 
 export default Calendar;
-
-const formatTime = (timestamp: number): string => {
-    const time = new Date(timestamp)
-    const hour = time.getHours();
-    const minute = time.getMinutes().toString().padStart(2, '0');
-    const meridian = hour < 12 ? 'AM' : 'PM';
-    const formattedHour = hour % 12 || 12;
-    return `${formattedHour}:${minute} ${meridian}`;
-};
