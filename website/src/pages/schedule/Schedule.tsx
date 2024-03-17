@@ -14,8 +14,13 @@ function Schedule() {
       .then((res) => res.json())
       .then((data) => {
         setEvents(data);
+        console.log(data);
+      })
+      .catch((error) => {
+        console.error("Error fetching events:", error);
       });
   }, []);
+  
 
   const handleDateClick = (clickedDate: Date) => {
     setSelectedDay(clickedDate);
