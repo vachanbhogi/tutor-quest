@@ -6,3 +6,9 @@ export interface Event {
     start_time: number;
     duration: number;
 }
+
+export interface Profile {
+    bio?: string;
+    educationLevel?: string;
+    courses?: string[];
+}

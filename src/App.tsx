@@ -9,6 +9,7 @@ import NotFound from "./components/not-found/NotFound";
 import Schedule from "./pages/schedule/Schedule";
 import Navbar from "./components/navbar/Navbar";
 import { AuthProvider } from "./context/AuthContext";
+import TutorForm from "./pages/tutor-form/TutorForm";
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/schedule/:id" element={<Schedule />} />
+            <Route path="/become-a-tutor" element={<TutorForm />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
