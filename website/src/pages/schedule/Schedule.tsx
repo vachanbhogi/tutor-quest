@@ -1,7 +1,16 @@
 import { useEffect, useState } from "react";
 import Calendar from "./../../components/calender/Calender";
 import { Event } from "./../../utils/types";
-import { formatTime } from './../../utils/helpers';
+import { formatTime } from "./../../utils/helpers";
+import { firestore } from "./../../firebase/firebase";
+import {
+  collection,
+  doc,
+  onSnapshot,
+  updateDoc,
+  DocumentData,
+  QuerySnapshot,
+} from "firebase/firestore";
 
 function Schedule() {
   const [events, setEvents] = useState<Event[]>([]);
@@ -10,17 +19,21 @@ function Schedule() {
   const [availableSessions, setAvailableSessions] = useState<Event[]>([]);
 
   useEffect(() => {
-    fetch("http://localhost:3000/events")
-      .then((res) => res.json())
-      .then((data) => {
-        setEvents(data);
-        console.log(data);
-      })
-      .catch((error) => {
-        console.error("Error fetching events:", error);
-      });
+    const unsubscribe = onSnapshot(
+      collection(firestore, "events"),
+      (snapshot: QuerySnapshot<DocumentData>) => {
+        const eventsData: Event[] = [];
+        snapshot.forEach((doc) => {
+          const eventData = doc.data() as Event;
+          eventData.event_id = doc.id;
+          eventsData.push(eventData);
+        });
+        setEvents(eventsData);
+      }
+    );
+
+    return () => unsubscribe();
   }, []);
-  
 
   const handleDateClick = (clickedDate: Date) => {
     setSelectedDay(clickedDate);
@@ -47,30 +60,15 @@ function Schedule() {
     }
   };
 
-  const handleBookSlot = (event: Event) => {
+  const handleBookSlot = async (event: Event) => {
     const studentId = "hello world";
-    fetch(`http://localhost:3000/events/${event.event_id}/book`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ studentId }),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.success) {
-          const updatedEvents = events.map((e) =>
-            e.event_id === event.event_id ? { ...e, student_id: studentId } : e
-          );
-          setEvents(updatedEvents);
-          setAddEventOpen(false);
-        } else {
-          console.log("Failed to book event:", data.message);
-        }
-      })
-      .catch((error) => {
-        console.error("Error booking slot:", error);
-      });
+    const eventRef = doc(collection(firestore, "events"), event.event_id);
+    try {
+      await updateDoc(eventRef, { student_id: studentId });
+      setAddEventOpen(false);
+    } catch (error) {
+      console.error("Error booking slot:", error);
+    }
   };
 
   useEffect(() => {

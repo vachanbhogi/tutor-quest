@@ -3,11 +3,13 @@ import { BrowserRouter as BrowserRouter, Routes, Route } from "react-router-dom"
 import Home from "./pages/home/Home";
 import NotFound from "./components/not-found/NotFound";
 import Schedule from "./pages/schedule/Schedule";
+import Navbar from "./components/navbar/Navbar";
 
 function App() {
   return (
     <div className='bg-gray-100 min-h-screen flex flex-col'>
     <BrowserRouter>
+      <Navbar /> 
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/schedule/:id" element={<Schedule />} />
