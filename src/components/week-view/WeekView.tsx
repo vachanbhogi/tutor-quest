@@ -1,15 +1,16 @@
 import { useEffect, useState } from 'react';
+import { Event } from './../../utils/types'
 
 type WeekViewProps = {
     setOpenModel: (index: number) => void;
-    sessions: any[]; // Array of sessions in the format [{ day: string, startTime: string, duration: number }]
+    sessions: Event[]; // Use the Event interface instead of any[]
 };
 
 function WeekView({ setOpenModel, sessions }: WeekViewProps) {
     const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
     // Use state to manage events
-    const [events, setEvents] = useState<any[]>(sessions);
+    const [events, setEvents] = useState<Event[]>(sessions);
 
     useEffect(() => {
         setEvents(sessions);
@@ -18,8 +19,8 @@ function WeekView({ setOpenModel, sessions }: WeekViewProps) {
     // Sort events by start time
     useEffect(() => {
         const sortedEvents = [...events].sort((a, b) => {
-            const timeA = new Date(`2022-01-01 ${a.startTime}`).getTime();
-            const timeB = new Date(`2022-01-01 ${b.startTime}`).getTime();
+            const timeA = new Date(`2022-01-01 ${a.start_time}`).getTime();
+            const timeB = new Date(`2022-01-01 ${b.start_time}`).getTime();
             return timeA - timeB;
         });
         setEvents(sortedEvents);
@@ -50,20 +51,20 @@ function WeekView({ setOpenModel, sessions }: WeekViewProps) {
                                     setOpenModel(dayIndex);
                                 }}
                             >
-                                {/* Display events for the day */}
                                 <div>
                                     {events
                                         .filter(
-                                            (event) => event['day'] === dayIndex
+                                            (event) =>
+                                                event.day === dayIndex
                                         )
                                         .map((event, index) => (
                                             <div
                                                 key={index}
                                                 className='bg-blue-200 text-xs text-blue-900 px-2 py-1 rounded mb-1 flex justify-between items-center'
                                             >
-                                                <div>{event.duration} min</div>
-                                                <p> @ </p>
-                                                <div>{event.startTime}</div>
+                                                {/* Display event details */}
+                                                <div>{event['start_time']}</div>
+                                                <div>{event['duration']/60/1000} min</div>
                                             </div>
                                         ))}
                                 </div>

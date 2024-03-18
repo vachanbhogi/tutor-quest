@@ -23,7 +23,7 @@ function Schedule() {
     const [availableSessions, setAvailableSessions] = useState<Event[]>([]);
 
     const user_id = useAuth().currentUser?.uid;
-    const { id } = useParams();
+    const { id } = useParams<{ id: string }>();
 
     useEffect(() => {
         const unsubscribe = onSnapshot(
@@ -45,11 +45,7 @@ function Schedule() {
     const handleDateClick = (clickedDate: Date) => {
         setSelectedDay(clickedDate);
         const sessionsForDay = events.filter((event) => {
-            const eventDate = new Date(event.start_time);
-            return (
-                eventDate.toDateString() === clickedDate.toDateString() &&
-                !event.student_id
-            );
+            return event.day === clickedDate.getDay() && !event.student_id;
         });
         if (sessionsForDay.length > 0) {
             setAvailableSessions(sessionsForDay);
@@ -111,21 +107,39 @@ function Schedule() {
                         </button>
                         <div className='flex flex-col items-center mb-4'>
                             <p className='text-lg font-semibold'>
-                                {selectedDay?.toDateString()}:
+                                Every{' '}
+                                {
+                                    [
+                                        'Sunday',
+                                        'Monday',
+                                        'Tuesday',
+                                        'Wednesday',
+                                        'Thursday',
+                                        'Friday',
+                                        'Saturaday',
+                                    ][selectedDay!.getDay()]
+                                }{' '}
+                                at:
                             </p>
                             <ul className='mt-2'>
-                                {availableSessions.map((event, index) => (
+                                {availableSessions.map((session, index) => (
                                     <li key={index} className='mb-2'>
                                         <button
                                             onClick={() =>
-                                                handleBookSlot(event)
+                                                handleBookSlot(session)
                                             }
                                             className='py-2 px-4 bg-blue-500 text-white rounded hover:bg-blue-600'
                                         >
-                                            {formatTime(event.start_time)} -{' '}
                                             {formatTime(
-                                                event.start_time +
-                                                    event.duration
+                                                new Date(
+                                                    `2022-01-01 ${session.start_time}`
+                                                ).getTime()
+                                            )}{' '}
+                                            -{' '}
+                                            {formatTime(
+                                                new Date(
+                                                    `2022-01-01 ${session.start_time}`
+                                                ).getTime() + session.duration
                                             )}
                                         </button>
                                     </li>

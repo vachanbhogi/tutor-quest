@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { Event } from '../../utils/types';
-import { formatTime } from '../../utils/helpers';
 
 type CalendarProps = {
     onDateClick: (day: Date) => void;
@@ -82,10 +81,14 @@ function Calendar({ onDateClick, events }: CalendarProps) {
     };
 
     const getEventsForDate = (date: Date): Event[] => {
-        return events.filter((event) => {
-            const eventDate = new Date(event.start_time);
-            return eventDate.toDateString() === date.toDateString();
-        });
+        const dayOfWeek = date.getDay();
+        const currentDate = new Date();
+        const futureEvents = events.filter(
+            (event) =>
+                event.day === dayOfWeek &&
+                new Date(date) > currentDate
+        );
+        return futureEvents;
     };
 
     return (
@@ -173,25 +176,31 @@ function Calendar({ onDateClick, events }: CalendarProps) {
                                                             {dayNumber}
                                                         </p>
                                                         {eventsForDate.map(
-                                                            (event, index) => (
-                                                                <div
-                                                                    key={index}
-                                                                    className={`mt-2 border-2 shadow-md rounded-lg w-full p-2 text-xs text-center ${
-                                                                        event.student_id
-                                                                            ? 'bg-blue-100 opacity-50'
-                                                                            : 'bg-blue-300'
-                                                                    }`}
-                                                                >
-                                                                    {formatTime(
-                                                                        event.start_time
-                                                                    )}{' '}
-                                                                    -{' '}
-                                                                    {formatTime(
-                                                                        event.start_time +
-                                                                            event.duration
-                                                                    )}
-                                                                </div>
-                                                            )
+                                                            (event, index) => {
+                                                                return (
+                                                                    <div
+                                                                        key={
+                                                                            index
+                                                                        }
+                                                                        className={`mt-2 border-2 shadow-md rounded-lg w-full p-2 text-xs text-center ${
+                                                                            event.student_id
+                                                                                ? 'bg-blue-100 opacity-50'
+                                                                                : 'bg-blue-300'
+                                                                        }`}
+                                                                    >
+                                                                        {
+                                                                            event.start_time
+                                                                        }{' '}
+                                                                        {
+                                                                            ' for '
+                                                                        }{' '}
+                                                                        {event.duration /
+                                                                            1000 /
+                                                                            60}{' '}
+                                                                        minutes
+                                                                    </div>
+                                                                );
+                                                            }
                                                         )}
                                                     </>
                                                 )}

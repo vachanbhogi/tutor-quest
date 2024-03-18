@@ -1,12 +1,16 @@
-import WeekView from '../../../components/week-view/WeekView';
 import { useState } from 'react';
+import { useAuth } from '../../../context/AuthContext';
+import { firestore } from '../../../firebase/firebase';
+import { collection, addDoc } from 'firebase/firestore'; // Import addDoc function
+import WeekView from '../../../components/week-view/WeekView';
 
 function Availability() {
     const [openModel, setOpenModel] = useState<number | null>(null);
     const [sessions, setSessions] = useState<any[]>([]);
     const [duration, setDuration] = useState<number>(30);
-    const [startTime, setStartTime] = useState<string>('17:00');
+    const [startTime, setStartTime] = useState<string>('5:00 PM');
     const [isValidTimeRange, setIsValidTimeRange] = useState<boolean>(true);
+    const user_id = useAuth().currentUser?.uid;
 
     const handleSubmit = (e: any) => {
         e.preventDefault();
@@ -24,19 +28,31 @@ function Availability() {
         setIsValidTimeRange(isSameDay);
 
         if (isSameDay) {
-            const newSession = { startTime, duration, day: openModel };
+            const newSession = { tutor_id: user_id, start_time: startTime, duration: duration * 60 * 1000, day: openModel, title:'' };
             setSessions([...sessions, newSession]);
-            console.log('Form submitted:', newSession);
-            setStartTime('17:00');
+            setStartTime('5:00 PM');
             setOpenModel(null);
         }
+    };
+
+    const sendData = async () => {
+        // Iterate over sessions and add each session to Firestore
+        sessions.forEach(async (session) => {
+            try {
+                // Add session to Firestore collection
+                await addDoc(collection(firestore, 'events'), session);
+                console.log('Session added to Firestore:', session);
+            } catch (error) {
+                console.error('Error adding session to Firestore:', error);
+            }
+        });
     };
 
     return (
         <>
             <div className='flex justify-between items-center w-full'>
                 <h1 className='text-4xl font-bold'>Set Availability</h1>
-                <button className='bg-blue-500 text-white py-4 px-16 rounded-lg hover:bg-blue-600 focus:outline-none'>
+                <button className='bg-blue-500 text-white py-4 px-16 rounded-lg hover:bg-blue-600 focus:outline-none' onClick={sendData}>
                     Done
                 </button>
             </div>
