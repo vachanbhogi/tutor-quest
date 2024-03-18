@@ -10,7 +10,11 @@ import {
   updateDoc,
   DocumentData,
   QuerySnapshot,
+  where,
+  query
 } from "firebase/firestore";
+import { useAuth } from "../../context/AuthContext";
+import { useParams } from "react-router-dom";
 
 function Schedule() {
   const [events, setEvents] = useState<Event[]>([]);
@@ -18,9 +22,12 @@ function Schedule() {
   const [addEventOpen, setAddEventOpen] = useState<boolean>(false);
   const [availableSessions, setAvailableSessions] = useState<Event[]>([]);
 
+  const user_id = useAuth().currentUser?.uid;
+  const {id} = useParams()
+
   useEffect(() => {
     const unsubscribe = onSnapshot(
-      collection(firestore, "events"),
+      query(collection(firestore, "events"), where("tutor_id", "==", id)),
       (snapshot: QuerySnapshot<DocumentData>) => {
         const eventsData: Event[] = [];
         snapshot.forEach((doc) => {
@@ -33,7 +40,9 @@ function Schedule() {
     );
 
     return () => unsubscribe();
-  }, []);
+  }, [id]);
+
+  
 
   const handleDateClick = (clickedDate: Date) => {
     setSelectedDay(clickedDate);
@@ -61,10 +70,9 @@ function Schedule() {
   };
 
   const handleBookSlot = async (event: Event) => {
-    const studentId = "hello world";
     const eventRef = doc(collection(firestore, "events"), event.event_id);
     try {
-      await updateDoc(eventRef, { student_id: studentId });
+      await updateDoc(eventRef, { student_id: user_id });
       setAddEventOpen(false);
     } catch (error) {
       console.error("Error booking slot:", error);
@@ -79,7 +87,7 @@ function Schedule() {
   }, []);
 
   return (
-    <div className="h-screen flex justify-center items-center">
+    <div className="h-full flex justify-center items-center">
       <Calendar onDateClick={handleDateClick} events={events} />
       {addEventOpen && (
         <div className="fixed top-0 left-0 w-full h-full flex justify-center items-center bg-black bg-opacity-50">
