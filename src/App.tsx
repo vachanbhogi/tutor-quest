@@ -10,6 +10,7 @@ import Schedule from "./pages/schedule/Schedule";
 import Navbar from "./components/navbar/Navbar";
 import { AuthProvider } from "./context/AuthContext";
 import TutorForm from "./pages/tutor-form/TutorForm";
+import Tutors from "./pages/tutors/Tutors"
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/schedule/:id" element={<Schedule />} />
             <Route path="/become-a-tutor" element={<TutorForm />} />
+            <Route path="/find-a-tutor" element={<Tutors />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>

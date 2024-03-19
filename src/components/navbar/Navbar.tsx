@@ -8,10 +8,10 @@ export default function Navbar() {
         try {
             if (!user) await doSignInWithGoogle();
             if (user) await doSignOut();
-            console.log(user)
         } catch(err) {
             console.error(err);
         }
+        console.log(user)
     };
 
     return (
@@ -32,7 +32,7 @@ export default function Navbar() {
                     <div className="hidden md:flex">
                         <div className="relative">
                             <button onClick={handleAuthChange} className="text-white px-3 py-2 rounded-md text-sm font-medium">
-                                {user ? 'Sign Out' : 'Sign In'}
+                                {user != null ? 'Sign Out' : 'Sign In'}
                             </button>
                         </div>
                     </div>            

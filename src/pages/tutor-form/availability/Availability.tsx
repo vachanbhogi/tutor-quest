@@ -36,7 +36,6 @@ function Availability() {
     };
 
     const sendData = async () => {
-        // Iterate over sessions and add each session to Firestore
         sessions.forEach(async (session) => {
             try {
                 // Add session to Firestore collection
