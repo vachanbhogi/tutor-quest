@@ -25,7 +25,7 @@ export default function Navbar() {
                                 {/* <a href="/about" className="text-white px-3 py-2 rounded-md text-sm font-medium">How it works</a> */}
                                 <a href="/find-a-tutor" className="text-white px-3 py-2 rounded-md text-sm font-medium">Find a Tutor</a>
                                 <a href="/become-a-tutor" className="text-white px-3 py-2 rounded-md text-sm font-medium">Become a Tutor</a>
-                                {/* <a href="/dashboard" className="text-white px-3 py-2 rounded-md text-sm font-medium">Dashboard</a> */}
+                                <a href="/dashboard" className="text-white px-3 py-2 rounded-md text-sm font-medium">Dashboard</a>
                             </div>
                         </div>
                     </div>

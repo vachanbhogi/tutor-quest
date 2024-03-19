@@ -13,8 +13,8 @@ export interface Profile {
     educationLevel?: string;
     courses?: string[];
     user: {
-        displayName?: string;
-        photoURL?: string;
-        uid?: string;
+        displayName: string;
+        photoURL: string;
+        uid: string;
     }
 }
