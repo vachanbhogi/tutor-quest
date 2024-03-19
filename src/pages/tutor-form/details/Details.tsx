@@ -25,29 +25,28 @@ function Details({ set }: DetailsProps) {
     ];
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-      e.preventDefault();
-      if (!bio || selectedCourses.length === 0 || !educationLevel) {
-          alert('Please fill in all fields');
-          return;
-      }
-      const tutor = {
-          bio: bio,
-          courses: selectedCourses,
-          educationLevel: educationLevel,
-          user: {
-              displayName: user.currentUser?.displayName, // Access the display name from currentUser
-              photoURL: user.currentUser?.photoURL,
-          }
-      };
-      try {
-          const docRef = doc(firestore, 'tutors', user.currentUser!.uid); // Access the UID from currentUser
-          await setDoc(docRef, tutor);
-          set(1);
-      } catch (error) {
-          console.error('Error adding session to Firestore:', error);
-      }
-  };
-  
+        e.preventDefault();
+        if (!bio || selectedCourses.length === 0 || !educationLevel) {
+            alert('Please fill in all fields');
+            return;
+        }
+        const tutor = {
+            bio: bio,
+            courses: selectedCourses,
+            educationLevel: educationLevel,
+            user: {
+              displayName: user.currentUser!.displayName,
+              photoURL: user.currentUser!.photoURL,
+            }
+        };
+        try {
+            const docRef = doc(firestore, 'tutors', user.currentUser!.uid);
+            await setDoc(docRef, tutor);
+            set(1)
+        } catch (error) {
+            console.error('Error adding session to Firestore:', error);
+        }
+    };
 
     const handleAddCourse = () => {
         if (courseInput.trim() && !selectedCourses.includes(courseInput)) {
@@ -66,10 +65,10 @@ function Details({ set }: DetailsProps) {
             <div className='bg-white p-8 rounded-3xl drop-shadow-2xl w-1/2'>
                 <div className='flex items-center justify-between mb-4 text-center'>
                     <p className='text-4xl font-semibold mb-2'>
-                        {user.currentUser!.displayName}
+                        {user.currentUser?.displayName}
                     </p>
                     <img
-                        src={user.currentUser!.photoURL!}
+                        src={user.currentUser?.photoURL!}
                         className='w-12 h-12 rounded-full'
                         alt='User Avatar'
                     />
