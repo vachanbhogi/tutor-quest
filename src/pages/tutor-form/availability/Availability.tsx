@@ -3,6 +3,7 @@ import { useAuth } from '../../../context/AuthContext';
 import { firestore } from '../../../firebase/firebase';
 import { collection, addDoc } from 'firebase/firestore'; // Import addDoc function
 import WeekView from '../../../components/week-view/WeekView';
+import { useNavigate } from 'react-router';
 
 function Availability() {
     const [openModel, setOpenModel] = useState<number | null>(null);
@@ -11,6 +12,7 @@ function Availability() {
     const [startTime, setStartTime] = useState<string>('5:00 PM');
     const [isValidTimeRange, setIsValidTimeRange] = useState<boolean>(true);
     const user = useAuth().currentUser
+    const navigate = useNavigate();
 
     const handleSubmit = (e: any) => {
         e.preventDefault();
@@ -45,6 +47,7 @@ function Availability() {
                 console.error('Error adding session to Firestore:', error);
             }
         });
+        navigate('/');
     };
 
     return (
