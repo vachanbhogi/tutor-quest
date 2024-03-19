@@ -34,13 +34,21 @@ function Dashboard() {
                 )
             );
             const eventsData: Event[] = [];
+            const tutorIdsSet: Set<string> = new Set();
+
+            snapshot.docs.forEach((d) => {
+                const eventData = d.data() as Event;
+                eventsData.push(eventData);
+                const tutorId = eventData.tutor_id;
+                tutorIdsSet.add(tutorId);
+            });
+
+            const tutorIdsArray = Array.from(tutorIdsSet);
+
             const tutorNamesData: string[] = [];
 
             await Promise.all(
-                snapshot.docs.map(async (d) => {
-                    const eventData = d.data() as Event;
-                    eventsData.push(eventData);
-                    const tutorId = eventData.tutor_id;
+                tutorIdsArray.map(async (tutorId) => {
                     const tutorDocRef = doc(firestore, 'tutors', tutorId);
                     const tutorDocSnapshot = await getDoc(tutorDocRef);
                     if (tutorDocSnapshot.exists()) {

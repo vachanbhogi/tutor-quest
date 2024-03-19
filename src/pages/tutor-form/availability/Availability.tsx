@@ -10,7 +10,7 @@ function Availability() {
     const [duration, setDuration] = useState<number>(30);
     const [startTime, setStartTime] = useState<string>('5:00 PM');
     const [isValidTimeRange, setIsValidTimeRange] = useState<boolean>(true);
-    const user_id = useAuth().currentUser?.uid;
+    const user = useAuth().currentUser
 
     const handleSubmit = (e: any) => {
         e.preventDefault();
@@ -28,7 +28,7 @@ function Availability() {
         setIsValidTimeRange(isSameDay);
 
         if (isSameDay) {
-            const newSession = { tutor_id: user_id, start_time: startTime, duration: duration * 60 * 1000, day: openModel, title:'' };
+            const newSession = { tutor_id: user?.uid, start_time: startTime, duration: duration * 60 * 1000, day: openModel, title:'' , tutor_name: user?.displayName};
             setSessions([...sessions, newSession]);
             setStartTime('5:00 PM');
             setOpenModel(null);

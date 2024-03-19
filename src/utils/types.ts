@@ -1,6 +1,7 @@
 export interface Event {
     student_id?: string;
     tutor_id: string;
+    tutor_name: string;
     event_id: string;
     day: number;
     start_time: string;
